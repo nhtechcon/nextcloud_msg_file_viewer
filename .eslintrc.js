@@ -9,5 +9,6 @@ module.exports = {
     "vue/html-indent": "off",
     "operator-linebreak": "off",
     "no-useless-return": "off",
+    "n/no-unsupported-features/node-builtins": "off",
   },
 };
