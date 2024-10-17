@@ -221,8 +221,8 @@ export default {
     background: #fff;
     width: 70vw;
     height: 80vh;
-    max-width: 700px;
-    margin-top: 10vh;
+    max-width: 1000px;
+    margin-top: 5vh;
     overflow: auto;
 }
 
@@ -236,6 +236,11 @@ export default {
 }
 
 @media (max-width: 700px) {
+    .root {
+        width: 100%;
+        height: 100%;
+    }
+
     .msg {
         min-height: 100%;
         height: fit-content;
