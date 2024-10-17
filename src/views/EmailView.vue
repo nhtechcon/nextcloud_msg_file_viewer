@@ -47,11 +47,16 @@
                 </div>
             </div>
 
-            <div v-if="email.attachments.length > 0" class="msg-attachs">
+            <div v-if="email.attachments.length > 0" class="msg-attach-area">
                 <strong>Anhänge:</strong>
-                <ul>
-                    <li v-for="attachment in email.attachments" :key="attachment.name" class="msg-attach-btn">
-                        {{ attachment.name }} ({{ attachment.size }} bytes)
+                <ul class="msg-attachs">
+                    <li v-for="att in email.attachments"
+                        :key="att.name"
+                        class="msg-attach-btn">
+                        <a :download="att.name" :href="att.downloadUrl">
+                            <b>{{ att.name }}</b><br>
+                            <span class="size">({{ att.size }} MB)</span>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -165,10 +170,14 @@ export default {
             });
 
             // Handling attachments
-            this.email.attachments = msg.attachments.map(attachment => ({
-                fileName: attachment.fileName,
-                size: attachment.size || 0, // assuming size is a property of the attachment
-            }));
+            this.email.attachments = msg.attachments.map(attachment => {
+                const att = msgReaderObj.getAttachment(attachment);
+                return {
+                    downloadUrl: URL.createObjectURL(new Blob([att.content])),
+                    name: att.fileName || attachment.fileNameShort || attachment.name,
+                    size: ((attachment.contentLength || 0) / 1024 / 1024).toFixed(2),
+                }
+            });
         },
 
         /**
@@ -258,14 +267,6 @@ export default {
     margin: 0 4px;
 }
 
-.msg-attachs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    border-top: 1px solid #7d7d7d;
-    padding: 16px;
-}
-
 .msg-content {
     padding: 16px;
     flex: 1;
@@ -274,13 +275,33 @@ export default {
     border-top: 1px solid #7d7d7d;
 }
 
-.msg-attach-btn {
+.msg-attach-area {
+    padding: 16px;
+    border-top: 1px solid #7d7d7d;
+}
+
+.msg-attachs {
     display: flex;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 7px;
+    padding: 16px;
+}
+
+.msg-attach-btn {
     padding: 10px 12px;
     width: fit-content;
     align-items: center;
-    color: #fff;
+    color: #000;
     text-decoration: none;
+    box-shadow: 0px 0px 4px #686868;
+    border-radius: 6px;
+}
+
+.msg-attach-btn:hover {
+    background-color: #d1d1d1;
+}
+
+.msg-attach-btn .size {
+    color: #7d7d7d;
 }
 </style>
