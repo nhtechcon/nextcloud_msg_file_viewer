@@ -26,7 +26,7 @@
                 <div v-if="email.to.length > 0" class="msg-recip">
                     <strong>An:</strong>
                     <span v-for="to in email.to" :key="to.address">
-                        {{ to.name }} &lt;{{ to.address }}&gt;
+                        {{ to.name }} <span v-if="to.address">&lt;{{ to.address }}&gt;</span>
                     </span>
                 </div>
 
